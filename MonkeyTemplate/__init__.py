@@ -1,0 +1,1 @@
+from nso_template import MonkeyTemplate
