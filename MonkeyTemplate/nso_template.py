@@ -72,7 +72,7 @@ if __name__ == "__main__":
 
     #These tests are setup for a specifc local enviroment
     #This is leveraging a specific template as well
-
+    #TODO Develop generic test scripts for clean NSO Enviroment
     assert MonkeyTemplate("service")
     mock_template = MonkeyTemplate("service")
     service_variables = ncs.template.Variables()
