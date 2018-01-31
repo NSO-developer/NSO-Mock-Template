@@ -60,5 +60,5 @@ def test_acl_tempalte():
 """
 
   generated_cli = main.apply_ipv4_acl("service", service_variables)
-  print expected_cli in generated_cli
+  assert expected_cli in generated_cli
 ```
