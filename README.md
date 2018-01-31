@@ -36,7 +36,7 @@ from MonkeyTemplate import MonkeyTemplate
 import main # NSO service python file with functions to apply config templates
 main.ncs.template.Template = MonkeyTemplate
 
-def test_acl_tempalte():
+def test_acl_template():
   "unittest to test if an ACL XML generates correct Cisco CLI"
    # Dummy that replicates ncs.application.Template behavior
   mock_template = MonkeyTemplate("service")
