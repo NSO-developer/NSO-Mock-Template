@@ -62,3 +62,53 @@ def test_acl_template():
   generated_cli = main.apply_ipv4_acl("service", service_variables)
   assert expected_cli in generated_cli
 ```
+
+This is testing the function below:
+
+```python
+def apply_ipv4_acl(service, service_variables):
+    """Apply the IPv4 ACL Template with service parameters"""
+    template = ncs.template.Template(service)
+    return template.apply('ipv4-acl', service_variables)
+```
+
+With the following XML template:
+
+```XML
+<config-template xmlns="http://tail-f.com/ns/config/1.0">
+  <devices xmlns="http://tail-f.com/ns/ncs">
+    <device>
+      <name>{$device}</name>
+      <config>
+        <ip xmlns="urn:ios">
+          <access-list>
+            <extended>
+              <ext-named-acl>
+                <name>{$acl_name}in</name>
+                <ext-access-list-rule>
+                  <rule>permit ip {$p2p_subnet} 0.0.0.3 any</rule>
+                </ext-access-list-rule>
+                <ext-access-list-rule>
+                  <rule>permit ip {$lab_subnet} {$lab_wildcard_mask} any</rule>
+                </ext-access-list-rule>
+                <ext-access-list-rule insert="last" >
+                  <rule>deny ip any any</rule>
+                </ext-access-list-rule>
+              </ext-named-acl>
+              <ext-named-acl>
+                <name>{$acl_name}out</name>
+                <ext-access-list-rule>
+                  <rule>deny ip {$p2p_subnet} 0.0.0.3 any</rule>
+                </ext-access-list-rule>
+                <ext-access-list-rule>
+                  <rule>deny ip {$lab_subnet} {$lab_wildcard_mask} any</rule>
+                </ext-access-list-rule>
+              </ext-named-acl>
+            </extended>
+          </access-list>
+        </ip>
+      </config>
+    </device>
+  </devices>
+</config-template>
+```
