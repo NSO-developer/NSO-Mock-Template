@@ -52,10 +52,9 @@ class MonkeyTemplate(object):
         """Gets the CLI output in /tmp/ncs_template.txt then removes it.
 
         """
-        import os
-        result = open('/tmp/template_data.txt', 'r').readlines()
-        os.remove('/tmp/template_data.txt' )
-        return result
+        with open('/tmp/template_data.txt', 'r') as infile:
+            os.remove('/tmp/template_data.txt' )
+            return infile.readlines()
 
     def _collate_results(self, output):
         """Collate the output list into a single string.
