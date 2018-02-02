@@ -112,3 +112,13 @@ With the following XML template:
   </devices>
 </config-template>
 ```
+
+## Common issues
+
+If the template.apply() mock functionality returns
+```
+----------------------^
+syntax error: unknown command
+```
+
+It indicates that the apply-config-template needs to be installed inside NSO
