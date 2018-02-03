@@ -67,7 +67,7 @@ class MonkeyTemplate(object):
         cli_string = self._make_ncs_cli(template, variables)
         self._open_ncs_cli(cli_string)
         result = self._collate_results(self._get_results())
-        return result
+        return MonkeyResult(result).result
 
 ########## End of Monkey Template ############
 

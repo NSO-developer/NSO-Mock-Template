@@ -32,7 +32,6 @@ def test_proper_cli():
     service_variables.add('building_id', "test1")
     service_variables.add('lab_v6_p2p', "2001::2")
     service_variables.add('lab_v6_prefix', "2001::2/64")
-    assert monkey_template._make_ncs_cli("ipv6-acl", service_variables)
     expected_cli = """
              ipv6 access-list ipv6-test1labID12342in
               permit ipv6 2001::2/64 any
@@ -43,7 +42,7 @@ def test_proper_cli():
               deny ipv6 2001::2/64 any
               deny ipv6 2001::2 any
              !"""
-    assert expected_cli in monkey_template.apply("ipv6-acl", service_variables)
+    assert expected_cli in monkey_template.apply("ipv6-acl", service_variables)["native"]['devices'][0]["data"]
 
 def test_dict_to_ncs_vars():
     # NSO Generic Template applicator helper tests
@@ -72,8 +71,7 @@ def test_apply_nso_template():
               deny ipv6 2001::2/64 any
               deny ipv6 2001::2 any
              !"""
-    print apply_nso_template("service", "ipv6-acl", variables)
-    assert expected_cli in apply_nso_template("service", "ipv6-acl", variables)
+    assert expected_cli in apply_nso_template("service", "ipv6-acl", variables)["native"]['devices'][0]["data"]
 
 
 def test_dict_to_ncs_vars_invalid():
