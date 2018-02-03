@@ -60,7 +60,7 @@ def test_acl_template():
 """
 
   generated_cli = main.apply_ipv4_acl("service", service_variables)
-  assert expected_cli in generated_cli
+  assert expected_cli in generated_cli["native"]['devices'][0]["data"]
 ```
 
 This is testing the function below:
@@ -115,10 +115,21 @@ With the following XML template:
 
 ## Common issues
 
-If the template.apply() mock functionality returns
-```
-----------------------^
-syntax error: unknown command
-```
+### template.apply() mock functionality returns `syntax error: unknown command`
 
-It indicates that the apply-config-template needs to be installed inside NSO
+It indicates that the apply-config-template needs to be installed inside NSO.
+
+Available here: https://github.com/NSO-developer/apply-config-template
+
+
+### template.apply() mock functionality results returns `% No modifications to commit.\n`
+
+
+It can be an indication on the configuration already be configured on the test device.
+Either remove the config, or leverage a 'clean' netsim with no base config.
+
+This can also be an indication of embedded template logic gone astray. If the templates contain complex logic not addressed by the inputs and as a result fails to meet a condition in which the config is applied this will fail.
+
+Also, if the device name key is begining collected via service YANG path, this will occur as well.
+
+For Python services, it is best to get all variables name from the python logic.
