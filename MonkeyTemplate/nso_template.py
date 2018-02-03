@@ -1,5 +1,6 @@
 import subprocess
 import os
+import re
 import ncs
 
 class MonkeyTemplate(object):
@@ -67,6 +68,37 @@ class MonkeyTemplate(object):
         self._open_ncs_cli(cli_string)
         result = self._collate_results(self._get_results())
         return result
+
+########## End of Monkey Template ############
+
+class MonkeyResult(object):
+    def __init__(self, result):
+        self.result = self._parse_result(result)
+
+    def _parse_result(self, result):
+        """Parse the result string into dict.
+
+        This function seeks to mimic ncs.maagic expected API for future dry-run.
+
+        Input:
+            result (str): ncs_cli commit dry-run string output
+
+        Returns:
+            dict: { "native": { "devices":[{'name':device, 'data': native}] } }
+
+        """
+        structure = { "native": { "devices":[] } }
+        devices = structure["native"]["devices"]
+        pairs = re.findall(r"device {(.*?)}", result, re.DOTALL)
+        for device in pairs:
+            lines =  device.split('\n')
+            name = lines[1].split('name ')[1]
+            data = lines[2:][0].split('data ')[1]
+            for line in lines[2:][1:-1]:
+                data += ('\n' + line)
+            devices.append({"name":name, "data":data})
+        return structure
+
 
 def apply_nso_template(service, template, variables):
     """Function to simplify the application of NSO Templates.
