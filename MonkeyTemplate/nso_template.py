@@ -1,7 +1,23 @@
+"""
+Copyright 2018 Brandon Black
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+     https://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+"""
 import subprocess
 import os
 import re
 import ncs
+
 
 class MonkeyTemplate(object):
     """Mock ncs.template.Template object to run a dry-run.
@@ -37,7 +53,8 @@ class MonkeyTemplate(object):
 
         """
         dir_path = os.path.dirname(os.path.realpath(__file__))
-        subprocess.call('sh %s/shell/ncs_cli_dry_run.sh "%s"' % (dir_path, ncs_cli), shell=True)
+        shell_str = 'sh %s/shell/ncs_cli_dry_run.sh "%s"' % (dir_path, ncs_cli)
+        subprocess.call(shell_str, shell=True)
         return True
 
     def _get_results(self):
@@ -45,7 +62,7 @@ class MonkeyTemplate(object):
 
         """
         with open('/tmp/template_data.txt', 'r') as infile:
-            os.remove('/tmp/template_data.txt' )
+            os.remove('/tmp/template_data.txt')
             return infile.readlines()
 
     def _collate_results(self, output):
@@ -69,16 +86,18 @@ class MonkeyTemplate(object):
         result = self._collate_results(self._get_results())
         return MonkeyResult(result).result
 
-########## End of Monkey Template ############
+# End of Monkey Template
+
 
 class MonkeyResult(object):
+
     def __init__(self, result):
         self.result = self._parse_result(result)
 
     def _parse_result(self, result):
         """Parse the result string into dict.
 
-        This function seeks to mimic ncs.maagic expected API for future dry-run.
+        Function seeks to mimic ncs.maagic expected API for future dry-run.
 
         Input:
             result (str): ncs_cli commit dry-run string output
@@ -87,16 +106,16 @@ class MonkeyResult(object):
             dict: { "native": { "devices":[{'name':device, 'data': native}] } }
 
         """
-        structure = { "native": { "devices":[] } }
+        structure = {"native": {"devices": []}}
         devices = structure["native"]["devices"]
         pairs = re.findall(r"device {(.*?)}", result, re.DOTALL)
         for device in pairs:
-            lines =  device.split('\n')
+            lines = device.split('\n')
             name = lines[1].split('name ')[1]
             data = lines[2:][0].split('data ')[1]
             for line in lines[2:][1:-1]:
                 data += ('\n' + line)
-            devices.append({"name":name, "data":data})
+            devices.append({"name": name, "data": data})
         return structure
 
 
@@ -116,6 +135,7 @@ def apply_nso_template(service, template, variables):
     template_obj = ncs.template.Template(service)
     template_vars = dict_to_ncs_vars(variables)
     return template_obj.apply(template, template_vars)
+
 
 def dict_to_ncs_vars(dictionary):
     """Function that translates a dictionary into ncs Variables object.
