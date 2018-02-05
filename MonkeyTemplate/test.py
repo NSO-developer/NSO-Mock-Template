@@ -181,3 +181,24 @@ native {
     assert "dummy2" in devices
     assert parsed["native"]['devices'][0]["data"] == "cli commands a b c\n            commands e f g"
     assert parsed["native"]['devices'][1]["data"] == "cli commands h i j\n            commands k l m"
+
+def test_MonkeyResult_raw():
+    """Test that the .raw field of the MonkeyResult.
+
+    """
+    result = """\
+native {
+        device {
+            name dummy
+            data cli commands a b c
+            commands e f g
+        }
+        device {
+            name dummy2
+            data cli commands h i j
+            commands k l m
+        }
+    }"""
+    mock_template =  MonkeyResult(result)
+
+    assert result == mock_template.raw

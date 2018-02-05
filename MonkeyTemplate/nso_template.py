@@ -92,6 +92,7 @@ class MonkeyTemplate(object):
 class MonkeyResult(object):
 
     def __init__(self, result):
+        self.raw = result
         self.result = self._parse_result(result)
 
     def _parse_result(self, result):
