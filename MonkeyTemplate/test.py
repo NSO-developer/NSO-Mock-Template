@@ -28,22 +28,22 @@ ncs.template.Template = MonkeyTemplate # Monkey patch
 def test_make_ncs_list():
     monkey_template = MonkeyTemplate("service")
     service_variables = ncs.template.Variables()
-    service_variables.add('lab_gateway', "netsim")
-    assert monkey_template._make_ncs_list(service_variables) == "variable { name lab_gateway value netsim } "
+    service_variables.add('lab_gateway', "lab-gw0")
+    assert monkey_template._make_ncs_list(service_variables) == "variable { name lab_gateway value lab-gw0 } "
 
 def test_ncs_cli():
     monkey_template = MonkeyTemplate("service")
     service_variables = ncs.template.Variables()
-    service_variables.add('lab_gateway', "netsim")
-    assert monkey_template._make_ncs_cli("ipv6-acl", service_variables) == "ipv6-acl variable { name lab_gateway value netsim } "
-    assert monkey_template._open_ncs_cli("ipv6-acl variable { name lab_gateway value netsim } ")
+    service_variables.add('lab_gateway', "lab-gw0")
+    assert monkey_template._make_ncs_cli("ipv6-acl", service_variables) == "ipv6-acl variable { name lab_gateway value lab-gw0 } "
+    assert monkey_template._open_ncs_cli("ipv6-acl variable { name lab_gateway value lab-gw0 } ")
     cli_result = monkey_template._get_results()
     assert cli_result[0] == "Error: Python cb_action error. Unknown error (66): A variable value has not been assigned to: building_id, lab_id, lab_v6_p2p, lab_v6_prefix\n"
 
 def test_proper_cli():
     monkey_template = MonkeyTemplate("service")
     service_variables = ncs.template.Variables()
-    service_variables.add('lab_gateway', "netsim")
+    service_variables.add('lab_gateway', "lab-gw0")
     service_variables.add('lab_id', "12342")
     service_variables.add('building_id', "test1")
     service_variables.add('lab_v6_p2p', "2001::2")
@@ -63,7 +63,7 @@ def test_proper_cli():
 def test_dict_to_ncs_vars():
     # NSO Generic Template applicator helper tests
     variables ={'lab_id': "12342",
-                'lab_gateway': "netsim",
+                'lab_gateway': "lab-gw0",
                 'building_id': "test1",
                 'lab_v6_p2p': "2001::2",
                 'lab_v6_prefix': "2001::2/64",
@@ -72,7 +72,7 @@ def test_dict_to_ncs_vars():
 
 def test_apply_nso_template():
     variables ={'lab_id': "12342",
-                'lab_gateway': "netsim",
+                'lab_gateway': "lab-gw0",
                 'building_id': "test1",
                 'lab_v6_p2p': "2001::2",
                 'lab_v6_prefix': "2001::2/64",
@@ -181,3 +181,24 @@ native {
     assert "dummy2" in devices
     assert parsed["native"]['devices'][0]["data"] == "cli commands a b c\n            commands e f g"
     assert parsed["native"]['devices'][1]["data"] == "cli commands h i j\n            commands k l m"
+
+def test_MonkeyResult_raw():
+    """Test that the .raw field of the MonkeyResult.
+
+    """
+    result = """\
+native {
+        device {
+            name dummy
+            data cli commands a b c
+            commands e f g
+        }
+        device {
+            name dummy2
+            data cli commands h i j
+            commands k l m
+        }
+    }"""
+    mock_template =  MonkeyResult(result)
+
+    assert result == mock_template.raw
