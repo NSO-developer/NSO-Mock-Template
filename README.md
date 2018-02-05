@@ -115,6 +115,18 @@ With the following XML template:
 
 ## Common issues
 
+### template.apply() returns `{'native':{'devices':[]}}`
+
+This is an issue where there is something that went wrong in the application of the template.
+
+To see the raw result from NSO print `template.apply().raw` this will provide the most info
+
+Common reasons:
+  1. There were 'No Modifications to Commit' -> ie the netsim already has the config
+  2. A variable was failed to be applied
+  3. The device name is mis-typed / nonexistent
+  4. NED errors applying the template
+
 ### template.apply() mock functionality returns `syntax error: unknown command`
 
 It indicates that the apply-config-template needs to be installed inside NSO.
