@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='MonkeyTemplate',
-    version='0.1.1',
+    version='0.1.2',
     author='Brandon Black',
     author_email='branblac@cisco.com',
     description='Mock ncs.application.Template tool for NSO testing',
