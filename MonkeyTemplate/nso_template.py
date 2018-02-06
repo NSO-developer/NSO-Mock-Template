@@ -92,7 +92,6 @@ class MonkeyTemplate(object):
 class MonkeyResult(object):
 
     def __init__(self, result):
-        self.raw = result
         self.result = self._parse_result(result)
 
     def _parse_result(self, result):
@@ -107,7 +106,7 @@ class MonkeyResult(object):
             dict: { "native": { "devices":[{'name':device, 'data': native}] } }
 
         """
-        structure = {"native": {"devices": []}}
+        structure = {"raw": result, "native": {"devices": []}}
         devices = structure["native"]["devices"]
         pairs = re.findall(r"device {(.*?)}", result, re.DOTALL)
         for device in pairs:

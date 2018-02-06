@@ -115,11 +115,11 @@ With the following XML template:
 
 ## Common issues
 
-### template.apply() returns `{'native':{'devices':[]}}`
+### template.apply() returns `{'raw': 'Lorem ipsum', 'native':{'devices':[]}}`
 
 This is an issue where there is something that went wrong in the application of the template.
 
-To see the raw result from NSO print `template.apply().raw` this will provide the most info
+To see the raw result from NSO print `template.apply()['raw']` this will provide the most info
 
 Common reasons:
   1. There were 'No Modifications to Commit' -> ie the netsim already has the config

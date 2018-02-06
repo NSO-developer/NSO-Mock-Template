@@ -200,5 +200,13 @@ native {
         }
     }"""
     mock_template =  MonkeyResult(result)
+    assert result == mock_template.result['raw']
 
-    assert result == mock_template.raw
+def test_MonkeyResult_raw_with_error():
+    """Test that the .raw field of the MonkeyResult returns expected error.
+
+    """
+    variables ={ 'lab_id': "12342"}
+    #mock_template = MonkeyTemplate("service")
+    result = apply_nso_template("service", "ipv6-acl", variables)
+    assert  result["raw"] == "Error: Python cb_action error. Unknown error (66): A variable value has not been assigned to: building_id, lab_gateway, lab_v6_p2p, lab_v6_prefix\n"
