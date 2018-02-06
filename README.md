@@ -47,8 +47,7 @@ def test_acl_template():
   service_variables.add('subnet', "10.0.1.0")
   service_variables.add('lab_wildcard_mask', "0.0.0.255")
 
-  expected_cli = """\
-         ip access-list extended aclin
+  expected_cli = """ip access-list extended aclin
           permit ip 10.0.0.0 0.0.0.3 any
           permit ip 10.0.1.0 0.0.0.255 any
           deny ip any any
