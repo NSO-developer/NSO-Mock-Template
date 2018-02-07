@@ -24,7 +24,7 @@ import ncs
 
 ncs.template.Template = MonkeyTemplate # Monkey patch
 #These tests are setup for a specifc local enviroment
-#This is leveraging a specific template as well
+#This leverags a specific template as well
 def test_make_ncs_list():
     monkey_template = MonkeyTemplate("service")
     service_variables = ncs.template.Variables()
